@@ -8,6 +8,7 @@ import "hardhat/console.sol";
 
 error Pudhina__MintFeeNotEnough();
 error Pudhina__TransferFailed();
+error Pudhina__AlreadyInitialized();
 
 contract Pudhina is ERC721URIStorage, Ownable{
     uint256 private immutable i_mintFee;
@@ -16,17 +17,15 @@ contract Pudhina is ERC721URIStorage, Ownable{
     string public __symbol;
     string _tokenURI;
     string[] internal _nftTokenURIs;
+    bool private _initialized;
+    
 
-    constructor(uint256 mintFee, string[] memory __tokenURIs) ERC721(__name, __symbol) {
+    constructor(uint256 mintFee, string[1] memory __tokenURIs, string memory _name, string memory _symbol) ERC721(_name, _symbol) {
         _tokenId = 0;
         i_mintFee = mintFee;
-        _nftTokenURIs = __tokenURIs;
-    }
-
-    function getNameAndSymbol(string memory _name, string memory _symbol) public {
         __name = _name;
         __symbol = _symbol;
-    
+        _initializeContract(__tokenURIs);
     }
 
     function returnNameAndSymbol() public view returns(string memory, string memory) {
@@ -59,4 +58,14 @@ contract Pudhina is ERC721URIStorage, Ownable{
             revert Pudhina__TransferFailed();
         }
     }
+
+    function _initializeContract(string[1] memory nftTokenURIs) private {
+        if(_initialized){
+            revert Pudhina__AlreadyInitialized();
+        }
+
+        _nftTokenURIs = nftTokenURIs;
+        _initialized = true;
+    }
+
 }

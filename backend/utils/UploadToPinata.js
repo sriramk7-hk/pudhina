@@ -1,63 +1,60 @@
 const pinataSDK = require("@pinata/sdk");
 const fs = require("fs");
+require("dotenv").config();
 const path = require("path");
 
 const pinataApiKey = process.env.PINATA_API_KEY;
 const pinataSecret = process.env.PINATA_API_SECRET;
 const pinata = new pinataSDK(pinataApiKey, pinataSecret);
-
-module.export = async function storeIamges(imagesFilePath) {
+async function storeImages(imagesFilePath) {
   const imagePath = path.resolve(imagesFilePath);
 
   const files = fs
     .readdirSync(imagePath)
     .filter((file) => file.includes(".png"));
-  let respones = [];
+  let responses = [];
   for (const i in files) {
     const readableStreamForFile = fs.createReadStream(
       `${imagePath}/${files[i]}`
     );
     const options = {
-      pinataMetaData: {
-        name: files[i],
-      },
-    };
+        pinataMetaData:{
+        name: files[i].toLowerCase(),
+      }
+    }
 
-    try {
-      await pinata
+    await pinata
         .pinFileToIPFS(readableStreamForFile, options)
         .then((result) => {
-          respones.push(result);
+          responses.push(result);
+          //console.log(result);
         })
         .catch((error) => {
           console.log(error);
         });
-    } catch (error) {
-      console.log(error);
-    }
+    
   }
 
-  return { respones, files };
-};
+  return { responses, files };
+}
 
-module.exports = async function storeTokenURI(metaData) {
+async function storeTokenURI(metaData) {
   const options = {
     pinataMetaData: {
       name: metaData.name,
     },
   };
-
-  try {
-    await pinata
+  let response;
+  await pinata
       .pinJSONToIPFS(metaData, options)
       .then((result) => {
-        return result;
+        response = result;
       })
       .catch((error) => {
         console.log(error);
       });
-  } catch (error) {
-    console.log(error);
-  }
-  return null;
-};
+  return response;
+}
+
+
+module.exports = { storeImages, storeTokenURI };
