@@ -20,7 +20,7 @@ contract Pudhina is ERC721URIStorage, Ownable{
     bool private _initialized;
     
 
-    constructor(uint256 mintFee, string[1] memory __tokenURIs, string memory _name, string memory _symbol) ERC721(_name, _symbol) {
+    constructor(uint256 mintFee, string[20] memory __tokenURIs, string memory _name, string memory _symbol) ERC721(_name, _symbol) {
         _tokenId = 0;
         i_mintFee = mintFee;
         __name = _name;
@@ -59,7 +59,7 @@ contract Pudhina is ERC721URIStorage, Ownable{
         }
     }
 
-    function _initializeContract(string[1] memory nftTokenURIs) private {
+    function _initializeContract(string[20] memory nftTokenURIs) private {
         if(_initialized){
             revert Pudhina__AlreadyInitialized();
         }
