@@ -13,24 +13,17 @@ error Pudhina__AlreadyInitialized();
 contract Pudhina is ERC721URIStorage, Ownable{
     uint256 private immutable i_mintFee;
     uint256 internal _tokenId;
-    string public __name;
-    string public __symbol;
     string _tokenURI;
     string[] internal _nftTokenURIs;
     bool private _initialized;
     
 
-    constructor(uint256 mintFee, string[20] memory __tokenURIs, string memory _name, string memory _symbol) ERC721(_name, _symbol) {
+    constructor(uint256 mintFee, string[] memory __tokenURIs) ERC721("Test_Emboss", "TEB") {
         _tokenId = 0;
         i_mintFee = mintFee;
-        __name = _name;
-        __symbol = _symbol;
         _initializeContract(__tokenURIs);
     }
 
-    function returnNameAndSymbol() public view returns(string memory, string memory) {
-        return (__name, __symbol);
-    }
 
     function mintNft() payable public {
         if(msg.value < i_mintFee){
@@ -59,13 +52,17 @@ contract Pudhina is ERC721URIStorage, Ownable{
         }
     }
 
-    function _initializeContract(string[20] memory nftTokenURIs) private {
+    function _initializeContract(string[] memory nftTokenURIs) private {
         if(_initialized){
             revert Pudhina__AlreadyInitialized();
         }
 
         _nftTokenURIs = nftTokenURIs;
         _initialized = true;
+    }
+
+    function returnTokenURI(uint256 index) public view returns(string memory){
+        return _nftTokenURIs[index];
     }
 
 }
