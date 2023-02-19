@@ -1,16 +1,14 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
+import '@/styles/globals.css'
 import { RainbowKitProvider, getDefaultWallets } from '@rainbow-me/rainbowkit';
 import { WagmiConfig, createClient, configureChains } from 'wagmi';
 import { goerli} from 'wagmi';
-import { Chain } from 'wagmi/chains';
+import Chain  from 'wagmi/chains';
 import {alchemyProvider} from 'wagmi/providers/alchemy'
 import "@rainbow-me/rainbowkit/styles.css"
 import { jsonRpcProvider } from 'wagmi/providers/jsonRpc';
+import NavBar from 'components/navbar';
 
-const MantleTestnet:Chain = {
+const MantleTestnet =  {
   id: 5001,
   name: "Mantle",
   network: "wadsley",
@@ -54,15 +52,13 @@ const wagmiClient = createClient({
   provider
 })
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(
-  <React.StrictMode>
+
+export default function App({ Component, pageProps }) {
+  return(
     <WagmiConfig client={wagmiClient}>
       <RainbowKitProvider chains={chains} modalSize="compact">
-        <App />
+        <Component {...pageProps} />
       </RainbowKitProvider>
     </WagmiConfig>
-    
-  </React.StrictMode>
-);
-
+  )
+}
