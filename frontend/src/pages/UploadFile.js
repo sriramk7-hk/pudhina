@@ -30,11 +30,6 @@ export default function UploadFile() {
               }
               }} />
               <button onClick={handleFiles}>Upload</button>
-            {/* <form onSubmit={handleFiles}>
-              
-               
-            </form>
-             */}
         </div>
     )
 }

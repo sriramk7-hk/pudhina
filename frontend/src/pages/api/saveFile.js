@@ -9,17 +9,18 @@ export const config ={
 
 export default function handler(req, res){
     const {method} = req;
-    
     const parseFile = () => {
 
         const options = {
-            uploadDir: path.join(process.cwd(), "/public"),
-            filename: () => {
-                return 
+            uploadDir: path.resolve("/home/420.801.K7/Projects/pudhina/backend/NFTImages"),
+            filename: (name, ext, part, form) => {
+                let filename = part.originalFilename;
+                return filename.split('.')[0].concat(".png");
             }
         }
 
         const form = formidable(options)
+        
         form.parse(req, (err, fields, files) => {
             if(err){
                 console.log(err)
